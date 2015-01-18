@@ -29,7 +29,8 @@ public class CoolWeatherDB {
 	 */
 	private CoolWeatherDB(Context context){
 		CoolWeatherOpenHelper dbHelper = new CoolWeatherOpenHelper(context, DB_NAME, null, VERSION);
-		db = dbHelper.getWritableDatabase();    
+												//Create and/or open a database that will be used for reading and writing
+		db = dbHelper.getWritableDatabase();    //在调用这个方法的时候假如是第一次，那么系统会先调用onCreate()
 	}
 	
 	/**
