@@ -55,7 +55,7 @@ public class Utility {
 	/**
 	 * 解析和处理服务器返回的县级数据
 	 */
-	public synchronized static boolean handleCountyResponse(CoolWeatherDB coolWeatherDB, 
+	public synchronized static boolean handleCountiesResponse(CoolWeatherDB coolWeatherDB, 
 			String response, int cityId){
 		if(!TextUtils.isEmpty(response)){
 			String[] allCouties = response.split(","); //分割字符串

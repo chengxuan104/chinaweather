@@ -30,7 +30,7 @@ public class CoolWeatherDB {
 	private CoolWeatherDB(Context context){
 		CoolWeatherOpenHelper dbHelper = new CoolWeatherOpenHelper(context, DB_NAME, null, VERSION);
 												//Create and/or open a database that will be used for reading and writing
-		db = dbHelper.getWritableDatabase();    //在调用这个方法的时候假如是第一次，那么系统会先调用onCreate()
+		db = dbHelper.getWritableDatabase();    //在调用这个方法的时候假如是第一次，那么系统会先调用onCreate()创建数据库
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class CoolWeatherDB {
 		if(cursor.moveToFirst()){							//把游标移动第一位，
 			do{
 				Province province = new Province(); 		
-				province.setId(cursor.getInt(cursor.getColumnIndex("id")));//這段不是太懂，不知道為什麼不用get而用set
+				province.setId(cursor.getInt(cursor.getColumnIndex("id")));//用model封装好数据再add进list去
 				province.setProvinceName(cursor
 						.getString(cursor.getColumnIndex("province_name")));
 				province.setProvinceCode(cursor
@@ -105,7 +105,7 @@ public class CoolWeatherDB {
 	public List<City> loadCities(int provinceId){
 		List<City> list = new ArrayList<City>();
 		Cursor cursor =db.query("City", null,  "province_id = ?", 
-				new String[]{String.valueOf(provinceId)},  null,  null,  null); 
+				new String[] { String.valueOf(provinceId) },  null,  null,  null);  //也许是这句有问题
 		if(cursor.moveToFirst()){
 			do{
 				City city = new City();

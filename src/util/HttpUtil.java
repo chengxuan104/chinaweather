@@ -24,7 +24,7 @@ public class HttpUtil {
 					URL url = new URL(address);
 					connection = (HttpURLConnection)url.openConnection(); 
 				
-					connection.setRequestMethod("get"); 	//设置请求方法,例如GET,POST,（网上说要大写）
+					connection.setRequestMethod("GET"); 	//设置请求方法,一定要GET,POST
 					connection.setConnectTimeout(8000);
 					connection.setReadTimeout(8000);
 					
