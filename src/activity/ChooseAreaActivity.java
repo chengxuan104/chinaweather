@@ -18,7 +18,10 @@ import com.chinaweather.app.R;
 //import android.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -76,10 +79,21 @@ public class ChooseAreaActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);        //保存活动的状态
-		requestWindowFeature(Window.FEATURE_NO_TITLE);//使能外部窗口调用
+		
+		//判断当前是否已经是county，假如是已经选择了county直接跳转到WeatherActivity
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if(prefs.getBoolean("city_selected", false)){
+			Intent intent = new Intent(this, WeatherActivity.class);
+			startActivity(intent);
+			finish();
+			return;
+		}
+		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);//不在活动中显示标题栏
 		setContentView(R.layout.choose_area);    //設置activity顯示界面
 		
-		Log.d("ChooseAreaActivity", "onCreate execute");
+		Log.v("Util", "handleWeatherResponse execute");
+		
 		listView = (ListView) findViewById(R.id.list_view); //获取xml文件里相对应的id
 		titleText = (TextView) findViewById(R.id.title_text); //获取xml文件里相对应的id
 		
@@ -100,6 +114,13 @@ public class ChooseAreaActivity extends Activity {
 				}else if(currentLevel == LEVEL_CITY){
 					selectedCity = cityList.get(index);
 					queryCounties();
+				}else if(currentLevel == LEVEL_COUNTY){
+					String countyCode = countyList.get(index).getCountyCode();   //得到县级的代号
+					
+					Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class); //切换activity
+					intent.putExtra("county_code", countyCode);    //把这个countycode传到另外一个activity里面去
+					startActivity(intent);
+					finish();
 				}
 			}
 		});

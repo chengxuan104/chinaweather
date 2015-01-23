@@ -30,7 +30,7 @@ public class HttpUtil {
 					
 					InputStream in = connection.getInputStream(); //输入数据.这一步是对HTTP资源的读写操作.也就是通过InputStream和OutputStream读取和写入数据
 					BufferedReader reader = new BufferedReader(new InputStreamReader(in)); //直接从缓冲区读取内容
-					StringBuilder response = new StringBuilder(); //和stringbuffer类似，但是不是synchronization的，效率更高 
+					StringBuilder response = new StringBuilder(); //和stringbuffer类似，但不是synchronization的，效率更高 
 					
 					String line;
 					while((line = reader.readLine()) != null){
@@ -39,22 +39,17 @@ public class HttpUtil {
 					if(listener != null){
 						listener.onFinish(response.toString());
 					}
-					
 				}  catch (Exception e) {
 					// TODO Auto-generated catch block
 					if(listener !=null){
 						listener.onError(e);
 					}
-					
 				}finally{
 					if(connection != null){
 						connection.disconnect();
-						
 					}
 				}
 			}
-			
 		}).start();
 	}
-
 }
