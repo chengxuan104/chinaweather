@@ -47,6 +47,11 @@ public class ChooseAreaActivity extends Activity {
 	private List<String> dataList = new ArrayList<String>();
 	
 	/**
+	 *	是否从weatherActivity中跳转过来 
+	 */
+	private boolean isFromWeatherActivity;
+	
+	/**
 	 * 省列表     
 	 */
 	private List<Province> provinceList;
@@ -81,8 +86,9 @@ public class ChooseAreaActivity extends Activity {
 		super.onCreate(savedInstanceState);        //保存活动的状态
 		
 		//判断当前是否已经是county，假如是已经选择了county直接跳转到WeatherActivity
+		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getBoolean("city_selected", false)){
+		if(prefs.getBoolean("city_selected", false) && !isFromWeatherActivity){
 			Intent intent = new Intent(this, WeatherActivity.class);
 			startActivity(intent);
 			finish();
@@ -92,10 +98,9 @@ public class ChooseAreaActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);//不在活动中显示标题栏
 		setContentView(R.layout.choose_area);    //設置activity顯示界面
 		
-		Log.v("Util", "handleWeatherResponse execute");
 		
-		listView = (ListView) findViewById(R.id.list_view); //获取xml文件里相对应的id
-		titleText = (TextView) findViewById(R.id.title_text); //获取xml文件里相对应的id
+		listView = (ListView) findViewById(R.id.list_view);      //获取xml文件里相对应的id
+		titleText = (TextView) findViewById(R.id.title_text);    //获取xml文件里相对应的id
 		
 		//数据到视图一般是三个步骤，1、新建一个数据适配器 2、适配器加载数据源 3、视图ListView加载适配器
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList); //适配器加载数据源
@@ -285,6 +290,10 @@ public class ChooseAreaActivity extends Activity {
 		}else if (currentLevel == LEVEL_CITY) {
 			queryProvince();
 		} else {
+			if(isFromWeatherActivity) {
+				Intent intent = new Intent(this, WeatherActivity.class);
+				startActivity(intent);
+			}
 			finish();
 		}
 	}

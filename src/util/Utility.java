@@ -128,7 +128,7 @@ public class Utility {
 		editor.putString("temp2", temp2);
 		editor.putString("weather_desp", weatherDesp);
 		editor.putString("publish_time", publishTime);
-		editor.putString("current_date", sdf.format(new Date(0)));	//书上是new Date() 
+		editor.putString("current_date", sdf.format(new java.util.Date()));	//书上是new Date() 
 		editor.commit();
 	}
 }
