@@ -1,5 +1,6 @@
 package activity;
 
+import java.io.ObjectOutputStream.PutField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +27,12 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +49,11 @@ public class ChooseAreaActivity extends Activity {
 	private ArrayAdapter<String> adapter;   //适配器，用于连接后端数据和前端显示的设配器接口
 	private CoolWeatherDB coolWeatherDB;
 	private List<String> dataList = new ArrayList<String>();
+	
+	/**
+	 * 主界面设置
+	 */
+	private Button setting;
 	
 	/**
 	 *	是否从weatherActivity中跳转过来 
@@ -103,6 +111,36 @@ public class ChooseAreaActivity extends Activity {
 		
 		listView = (ListView) findViewById(R.id.list_view);      //获取xml文件里相对应的id
 		titleText = (TextView) findViewById(R.id.title_text);    //获取xml文件里相对应的id
+		setting = (Button) findViewById(R.id.setting_button);
+		
+		//设置一个autoUpdate的值
+		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this).edit();
+		editor.putBoolean("autoUpdate", true);
+		editor.commit();
+		
+		//侦听设置按钮，假如点下，关闭自动更新
+		setting.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this);
+				//判断autoUpdate的值，设为相反的值，实现类似滑动按钮 
+				if(prefs.getBoolean("autoUpdate", false))
+				{
+					SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this).edit();
+					editor.putBoolean("autoUpdate", false);
+					editor.commit();
+				}
+				else
+				{
+					SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this).edit();
+					editor.putBoolean("autoUpdate",true);
+					editor.commit();
+				}
+			}
+		});
 		
 		//数据到视图一般是三个步骤，1、新建一个数据适配器 2、适配器加载数据源 3、视图ListView加载适配器
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList); //适配器加载数据源

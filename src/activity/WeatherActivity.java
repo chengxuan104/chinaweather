@@ -24,9 +24,15 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WeatherActivity extends Activity{
 	private LinearLayout weatherInfoLayout;
+	
+	/**
+	 *  关闭或者打开自动更新
+	 */
+	private Boolean closeAutoFromChooseArea;
 	/**
 	 * 返回按钮
 	 */
@@ -222,8 +228,19 @@ public class WeatherActivity extends Activity{
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
 		
-		//开启后台服务
-		Intent intent = new Intent(this, AutoUpdateService.class);
-		startService(intent);
+		//根据autoUpdate进行判断，autoUpdate开启or关闭后台服务
+		if(prefs.getBoolean("autoUpdate", false))
+		{
+			Toast.makeText(this,
+					"关闭自动更新", Toast.LENGTH_LONG).show();
+			Intent intent = new Intent(this, AutoUpdateService.class);
+			stopService(intent);
+		}
+		else{
+			Toast.makeText(this,
+					"开启自动更新", Toast.LENGTH_LONG).show();
+			Intent intent = new Intent(this, AutoUpdateService.class);
+			startService(intent);
+		}
 	}
 }
