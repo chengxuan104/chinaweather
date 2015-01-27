@@ -3,6 +3,7 @@ package activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import service.AutoUpdateService;
 import util.HttpCallbackListener;
 import util.HttpUtil;
 import util.Utility;
@@ -94,6 +95,7 @@ public class ChooseAreaActivity extends Activity {
 			finish();
 			return;
 		}
+
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);//不在活动中显示标题栏
 		setContentView(R.layout.choose_area);    //設置activity顯示界面

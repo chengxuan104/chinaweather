@@ -4,6 +4,7 @@ package activity;
 
 import java.sql.Date;
 
+import service.AutoUpdateService;
 import util.HttpCallbackListener;
 import util.HttpUtil;
 import util.Utility;
@@ -218,9 +219,11 @@ public class WeatherActivity extends Activity{
 		publishText.setText("今天" + prefs.getString("publish_time", "") + "发布");
 		currentDateText.setText(prefs.getString("current_date", ""));
 		
-
-		
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
+		
+		//开启后台服务
+		Intent intent = new Intent(this, AutoUpdateService.class);
+		startService(intent);
 	}
 }

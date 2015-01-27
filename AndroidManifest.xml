@@ -25,6 +25,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <service android:name="service.AutoUpdateService">         
+        </service>
+        
+        <receiver android:name="receiver.AlarmReceiver">
+        </receiver>
+        
     </application>
 
 </manifest>
