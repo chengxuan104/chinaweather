@@ -19,9 +19,19 @@
             android:layout_width="30dp"  
             android:layout_height="30dp"  
             android:layout_marginTop="10dp"  
+            android:layout_marginLeft="10dp"
             android:layout_alignParentLeft="true"  
             android:background="@drawable/lefticon"  
-            android:onClick="OpenLefttMenu" />
+            android:onClick="OpenLeftMenu" />
+        
+        <Button  
+            android:layout_width="30dp"  
+            android:layout_height="30dp"  
+            android:layout_marginTop="10dp"  
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"  
+            android:background="@drawable/righticon"  
+            android:onClick="OpenRightMenu" />
           
         <!-- 这个是返回按钮，直接跳到choosearea那里，后续可以设置为+ -->
        <!--  <Button 

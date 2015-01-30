@@ -125,7 +125,7 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 		//初始各控件
 		cityNameText = (TextView) findViewById(R.id.city_name);
 		//return_button =  (Button) findViewById(R.id.return_button); //cx
-		refresh_button =  (Button) findViewById(R.id.refresh_button); //cx
+		//refresh_button =  (Button) findViewById(R.id.refresh_button); //cx
 		
 		weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
 		publishText = (TextView) findViewById(R.id.publish_text);
@@ -141,7 +141,7 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
         							android.R.color.holo_orange_light, android.R.color.holo_red_light);         
         
 		//侧边栏  
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout); //抽屉
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout); //
 		mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.LEFT);  //左侧菜单dian击能出现
 		initEvents(); //手势滑动
 		
@@ -257,10 +257,18 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 	}
 	
 	/**
+	 * 打开右边分享栏
+	 * @param view
+	 */
+	public void OpenRightMenu(View view){
+		 
+	}
+	
+	/**
 	 * 按键打开左侧边栏，button监听放在xml里面
 	 * @param view
 	 */
-	public void OpenLefttMenu(View view){
+	public void OpenLeftMenu(View view){
 		 mDrawerLayout.openDrawer(Gravity.LEFT);
 	}
 	
