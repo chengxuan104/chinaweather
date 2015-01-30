@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/drawer_layout" 
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:background="@drawable/bg" >
+     
+<LinearLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -7,9 +13,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#484E61">
-
-        <Button 
+        android:background="#00000000">
+        
+        <Button  
+            android:layout_width="30dp"  
+            android:layout_height="30dp"  
+            android:layout_marginTop="10dp"  
+            android:layout_alignParentLeft="true"  
+            android:background="@drawable/lefticon"  
+            android:onClick="OpenLefttMenu" />
+          
+        <!-- 这个是返回按钮，直接跳到choosearea那里，后续可以设置为+ -->
+       <!--  <Button 
             android:id="@+id/return_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -17,17 +32,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
 			android:background="@drawable/home"
-			/>
-        
-        <Button 
-            android:id="@+id/refresh_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-			android:background="@drawable/refresh"/>
-        
+			/> -->
+              		
         <TextView
             android:id="@+id/city_name"
             android:layout_width="wrap_content"
@@ -35,31 +41,66 @@
             android:layout_centerInParent="true"
             android:textColor="#fff"
             android:textSize="24sp" />
-     </RelativeLayout>
-     
-    <!--<RelativeLayout>  相对布局，可以通过设置相对定位的方式让控件出现在任何位置   -->
-     <RelativeLayout 
-         android:layout_width="match_parent"
-         android:layout_height="0dp"
-         android:layout_weight="1"
-         android:background="#27A5F9" >
         
+
+     </RelativeLayout>
+  
+	<!--下拉刷新  使用了SwipeRefreshLayout，
+	1、SwipeRefreshLayout必须要是用listview或者scrollview才能进行刷新
+	2、android:fillViewport="true"这句的作用是防止所有的控件挤成一团，可以撑满整个布局-->
+       <!--   android:background="#27A5F9" -->
+<android.support.v4.widget.SwipeRefreshLayout  
+    android:id="@+id/id_swipe_ly"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent" > 
+<!--     
+<ListView  
+     android:id="@+id/id_listview"  
+     android:layout_width="match_parent"  
+     android:layout_height="match_parent" >
+</ListView>  -->
+
+	 <ScrollView 
+	     android:id="@+id/scroll_view"
+	     android:fillViewport="true"
+	     android:layout_width="fill_parent"
+	     android:layout_height="wrap_content"
+	     android:scrollbars="none"
+	     >
+	   <LinearLayout 
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:orientation="vertical"
+         >
+        
+         <Button 
+            android:id="@+id/refresh_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+			android:background="@drawable/refresh"/>
+         
          <TextView 
              android:id="@+id/publish_text"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:layout_alignParentRight="true"
              android:layout_marginRight="10dp"
              android:layout_marginTop="10dp"
              android:textColor="#FFF"
-             android:textSize="18sp" />
-         
-         <!--<LinearLayout>  线性版面配置，在这个标签中，所有元件都是按由上到下的排队排成的   -->  
+             android:textSize="18sp" /> 
+         <TextView 
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginRight="10dp"
+             android:layout_marginTop="10dp"
+             android:textColor="#FFF"
+             android:textSize="228sp" 
+             android:text="cxfdfd"/> 
+             
          <LinearLayout
              android:id="@+id/weather_info_layout" 
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:layout_centerInParent="true"
              android:orientation="vertical">
              
              <TextView
@@ -113,5 +154,22 @@
                   
               </LinearLayout>
          </LinearLayout>
-     </RelativeLayout>
+ </LinearLayout> 
+	     
+	 </ScrollView>
+	 
+</android.support.v4.widget.SwipeRefreshLayout>
+
+
 </LinearLayout>
+         <!-- 左侧滑动栏 -->
+         <fragment 
+             android:id="@+id/left_drawer"
+             android:layout_width="200dp"
+             android:layout_height="match_parent" 
+             android:name="activity.LeftFragment"
+             android:layout_gravity="left"
+             android:tag="LEFT"> 
+	    </fragment> 
+             
+</android.support.v4.widget.DrawerLayout>

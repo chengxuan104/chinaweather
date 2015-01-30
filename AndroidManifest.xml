@@ -14,10 +14,12 @@
         android:icon="@drawable/weather"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:name="activity.WeatherActivity"></activity>
+        <activity android:name="activity.ChooseAreaActivity">
+
+        </activity>
             
         <activity
-            android:name="activity.ChooseAreaActivity"
+            android:name="activity.WeatherActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

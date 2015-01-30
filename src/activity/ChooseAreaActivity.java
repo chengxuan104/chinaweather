@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -36,8 +37,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Bundle;  
 
-public class ChooseAreaActivity extends Activity {
+
+public class ChooseAreaActivity extends Activity{
 	
 	public static final int LEVEL_PROVINCE = 0;
 	public static final int LEVEL_CITY = 1;
@@ -50,10 +53,12 @@ public class ChooseAreaActivity extends Activity {
 	private CoolWeatherDB coolWeatherDB;
 	private List<String> dataList = new ArrayList<String>();
 	
+	
 	/**
 	 * 主界面设置
 	 */
 	private Button setting;
+	
 	
 	/**
 	 *	是否从weatherActivity中跳转过来 
@@ -92,26 +97,26 @@ public class ChooseAreaActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
-		super.onCreate(savedInstanceState);        //保存活动的状态
-		
-		//判断当前是否已经是county，假如是已经选择了county直接跳转到WeatherActivity
-		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getBoolean("city_selected", false) && !isFromWeatherActivity){
-			Intent intent = new Intent(this, WeatherActivity.class);
-			startActivity(intent);
-			finish();
-			return;
-		}
-
-		
+		super.onCreate(savedInstanceState);        //保存活动的状态	
 		requestWindowFeature(Window.FEATURE_NO_TITLE);//不在活动中显示标题栏
 		setContentView(R.layout.choose_area);    //設置activity顯示界面
+		
+//		//判断当前是否已经是county，假如是已经选择了county直接跳转到WeatherActivity
+//		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
+//		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//		if(prefs.getBoolean("city_selected", false) && !isFromWeatherActivity){
+//			Intent intent = new Intent(this, WeatherActivity.class);
+//			startActivity(intent);
+//			finish();
+//			return;
+//		}
 		
 		
 		listView = (ListView) findViewById(R.id.list_view);      //获取xml文件里相对应的id
 		titleText = (TextView) findViewById(R.id.title_text);    //获取xml文件里相对应的id
-		setting = (Button) findViewById(R.id.setting_button);
+		setting = (Button) findViewById(R.id.setting_button);    //开关自动更新
+		
+
 		
 		//设置一个autoUpdate的值
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this).edit();
@@ -171,6 +176,8 @@ public class ChooseAreaActivity extends Activity {
 		});
 		queryProvince(); //上面的是初始化，从这里开始加载省级数据。
 	}
+	
+
 	
 	/**
 	 * 查询全国所有的省，优先从数据库查询，如果没有查询到再去服务器上查询
