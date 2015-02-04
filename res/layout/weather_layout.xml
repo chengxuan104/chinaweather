@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+第一个布局显示主界面
+第二个布局显示左边抽屉界面
+第三个布局显示右抽屉
+左滑右滑用 android:layout_gravity=""控制  left right  -->
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
      android:id="@+id/drawer_layout" 
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      android:background="@drawable/bg" >
-     
 <LinearLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
+    android:orientation="vertical" >	
+   
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#00000000">
-        
+	    	
         <Button  
             android:layout_width="30dp"  
             android:layout_height="30dp"  
             android:layout_marginTop="10dp"  
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="10dp" 
             android:layout_alignParentLeft="true"  
             android:background="@drawable/lefticon"  
             android:onClick="OpenLeftMenu" />
         
         <Button  
+            android:id="@+id/PopupWindow"
             android:layout_width="30dp"  
             android:layout_height="30dp"  
             android:layout_marginTop="10dp"  
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="10dp" 
             android:layout_alignParentRight="true"  
-            android:background="@drawable/righticon"  
-            android:onClick="OpenRightMenu" />
+            android:background="@drawable/righticon"
+            />
           
-        <!-- 这个是返回按钮，直接跳到choosearea那里，后续可以设置为+ -->
+       <!-- 这个是返回按钮，直接跳到choosearea那里，后续可以设置为+ -->
        <!--  <Button 
             android:id="@+id/return_button"
             android:layout_width="30dp"
@@ -54,22 +59,28 @@
         
 
      </RelativeLayout>
-  
+    <!-- GridView不能放在这个的wipeRefreshLayout的后面，不知道为什么-->
+	<!-- 	
+	<GridView 
+		android:id="@+id/gridView_layout"
+		android:layout_width="match_parent"
+		android:layout_height="150dp" 
+		android:numColumns="4"
+		android:gravity="center"
+		android:layout_gravity="bottom"
+		android:stretchMode="columnWidth"
+		/>  -->
+    
 	<!--下拉刷新  使用了SwipeRefreshLayout，
 	1、SwipeRefreshLayout必须要是用listview或者scrollview才能进行刷新
-	2、android:fillViewport="true"这句的作用是防止所有的控件挤成一团，可以撑满整个布局-->
+	2、android:fillViewport="true"这句的作用是防止所有的控件挤成一团，可以撑满整个布局
+	3、只能有一个子类-->
        <!--   android:background="#27A5F9" -->
 <android.support.v4.widget.SwipeRefreshLayout  
     android:id="@+id/id_swipe_ly"  
     android:layout_width="match_parent"  
     android:layout_height="match_parent" > 
-<!--     
-<ListView  
-     android:id="@+id/id_listview"  
-     android:layout_width="match_parent"  
-     android:layout_height="match_parent" >
-</ListView>  -->
-
+		
 	 <ScrollView 
 	     android:id="@+id/scroll_view"
 	     android:fillViewport="true"
@@ -164,14 +175,11 @@
                   
               </LinearLayout>
          </LinearLayout>
- </LinearLayout> 
-	     
-	 </ScrollView>
-	 
-</android.support.v4.widget.SwipeRefreshLayout>
-
-
+ 	  </LinearLayout>    
+    </ScrollView>
+ </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
+
          <!-- 左侧滑动栏 -->
          <fragment 
              android:id="@+id/left_drawer"
@@ -180,6 +188,5 @@
              android:name="activity.LeftFragment"
              android:layout_gravity="left"
              android:tag="LEFT"> 
-	    </fragment> 
-             
+	    </fragment>            
 </android.support.v4.widget.DrawerLayout>

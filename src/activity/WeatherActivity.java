@@ -5,6 +5,7 @@ package activity;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import service.AutoUpdateService;
@@ -13,6 +14,7 @@ import util.HttpUtil;
 import util.Utility;
 
 import com.chinaweather.app.R;
+
 import android.app.Activity;
 
 import android.content.Context;
@@ -31,9 +33,11 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +58,8 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 //    private ArrayAdapter<String> mAdapter;  
 //    private List<String> mDatas = new ArrayList<String>(Arrays.asList("Java", "Javascript", "C++", "Ruby", "Json",  
 //            "HTML"));
-    
+
+	
 	/**
 	 * 下拉刷新
 	 */
@@ -111,10 +116,12 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 	
 	
 	/**
-	 * 
+	 * 县城
 	 */
 	 String countyCode;
-	
+	 
+	 //调用selectPicpopupWindow
+	 SelectPicPopupWindow menuWindow;  
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -144,6 +151,42 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout); //
 		mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.LEFT);  //左侧菜单dian击能出现
 		initEvents(); //手势滑动
+		
+		//打开底部PopupWindow分享栏
+		Button popupWindow = (Button) this.findViewById(R.id.PopupWindow);
+        //把文字控件添加监听，点击弹出自定义窗口  
+		popupWindow.setOnClickListener(new OnClickListener(){             
+            public void onClick(View v) {  
+                //实例化SelectPicPopupWindow  
+                menuWindow = new SelectPicPopupWindow(WeatherActivity.this, itemsOnClick);  
+                //显示窗口  
+                menuWindow.showAtLocation(WeatherActivity.this.findViewById(R.id.drawer_layout), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 100, 0); //设置PopupWindow在layout中显示的位置  
+            }  
+        });
+        
+//		//点击button显示底部弹出的表格栏
+//		GridView gridView = (GridView) findViewById(R.id.gridView_layout);
+//		ArrayList<HashMap<String, Object>> listImageItem = new ArrayList<HashMap<String,Object>>();
+//		HashMap<String, Object> map = new HashMap<String, Object>();   //new 一个key-value的hashmap对象
+//		map.put("popup_Image", R.drawable.weixin);
+//		map.put("popup_Text", "微信");
+//		listImageItem.add(map);  //添加图片和文字完成
+//		
+//		// 参数一是当前上下文Context对象  
+//        // 参数二是图片数据列表，要显示数据都在其中  
+//        // 参数三是界面的XML文件，注意，不是整体界面，而是要显示在GridView中的单个Item的界面XML  
+//        // 参数四是动态数组中与map中图片对应的项，也就是map中存储进去的相对应于图片value的key  
+//        // 参数五是界面XML中的图片ID  
+//		SimpleAdapter saImageItems = new SimpleAdapter(this, 
+//											listImageItem,   
+//											R.layout.popupwindow_bottom_layout, 
+//											new String[] {"popup_Image", "popup_Text"},
+//											new int[] {R.id.popup_Image, R.id.popup_Text}
+//											);
+//		gridView.setAdapter(saImageItems);
+//		//gridView.setOnItemClickListener();
+		
+		
 		
 //		mListView = (ListView) findViewById(R.id.id_listview);  
 //        mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.id_swipe_ly);  
@@ -256,14 +299,7 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 		});
 	}
 	
-	/**
-	 * 打开右边分享栏
-	 * @param view
-	 */
-	public void OpenRightMenu(View view){
-		 
-	}
-	
+
 	/**
 	 * 按键打开左侧边栏，button监听放在xml里面
 	 * @param view
@@ -417,5 +453,33 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 		mHandler.sendEmptyMessageDelayed(REFRESH_COMPLETE, 2000);   //what=272  milles = 2000
 	}
 	
-	
+	 //为底部弹出窗口实现监听类  
+    private OnClickListener  itemsOnClick = new OnClickListener(){  
+    	
+        public void onClick(View v) {  
+            menuWindow.dismiss();      //等待switch事件执行完以后popupwindow消失
+            switch (v.getId()) {  
+            case R.id.btn_duanxin:
+                break;  
+            case R.id.btn_qq:                 
+                break;  
+            case R.id.btn_renren:
+                break;  
+            case R.id.btn_qqzone:                 
+                break; 
+            case R.id.btn_pengyouquan:
+                break;  
+            case R.id.btn_tengxunweibo:                 
+                break; 
+            case R.id.btn_weibo:
+                break;  
+            case R.id.btn_weixin:                 
+                break; 
+            default:  
+                break;  
+            }  
+                  
+        }  
+          
+    };  
 }
