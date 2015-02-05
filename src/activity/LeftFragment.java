@@ -4,6 +4,7 @@ package activity;
 import com.chinaweather.app.R;
 
 import android.support.v4.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,5 +16,10 @@ public class LeftFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle saveInstanceState){
 			return inflater.inflate(R.layout.layout_menu, container, false);
+			//²à±ßÀ¸Ìí¼Óbutton
+			
+
 	} 
+
+
 }

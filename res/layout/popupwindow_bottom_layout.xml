@@ -14,43 +14,7 @@
     android:orientation="vertical"  
     android:layout_alignParentBottom="true"> 
        
- <!--     
-    <Button  
-        android:id="@+id/btn_take_photo"  
-        android:layout_marginLeft="20dip"  
-        android:layout_marginRight="20dip"  
-        android:layout_marginTop="20dip"  
-        android:layout_width="fill_parent"  
-        android:layout_height="wrap_content"  
-        android:text="拍照"  
-        android:textStyle="bold"  
-         />  
-  
-    <Button  
-        android:id="@+id/btn_pick_photo"  
-        android:layout_marginLeft="20dip"  
-        android:layout_marginRight="20dip"  
-        android:layout_marginTop="5dip"   
-         android:layout_width="fill_parent"  
-        android:layout_height="wrap_content"  
-        android:text="从相册选择"   
-         android:textStyle="bold"  
-         />  
-   
-    <Button  
-        android:id="@+id/btn_cancel"  
-       android:layout_marginLeft="20dip"  
-       android:layout_marginRight="20dip"  
-       android:layout_marginTop="15dip"   
-       android:layout_marginBottom="15dip"  
-       android:layout_width="fill_parent"  
-       android:layout_height="wrap_content"  
-       android:text="取消"  
-       android:textColor="#ffffff"  
-       android:textStyle="bold"  
-         
-        />   -->
-        
+ 
     <GridLayout 
     android:layout_width="match_parent"    
     android:layout_height="wrap_content"
@@ -67,10 +31,10 @@
 		android:drawableTop="@drawable/duanxin"
 	    android:text="短信"/>
 	<Button
-	    android:id="@+id/btn_qq"
+	    android:id="@+id/btn_weibo"
 	    android:background="@android:color/transparent"
-		android:drawableTop="@drawable/qq"
-	    android:text="QQ"/>
+		android:drawableTop="@drawable/weibo"
+	    android:text="新浪微博"/>
 	<Button
 	    android:id="@+id/btn_renren"
 	    android:background="@android:color/transparent"
@@ -92,10 +56,11 @@
 		android:drawableTop="@drawable/tengxunweibo"
 	    android:text="腾讯微博"/>
 	<Button
-	    android:id="@+id/btn_weibo"
+	    android:id="@+id/btn_qq"
 	    android:background="@android:color/transparent"
-		android:drawableTop="@drawable/weibo"
-	    android:text="新浪微博"/>
+		android:drawableTop="@drawable/qq"
+	    android:text="QQ"/>
+	
 	<Button
 	    android:id="@+id/btn_weixin"
 	    android:background="@android:color/transparent"

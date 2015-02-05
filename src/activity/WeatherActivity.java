@@ -163,7 +163,9 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
                 menuWindow.showAtLocation(WeatherActivity.this.findViewById(R.id.drawer_layout), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 100, 0); //设置PopupWindow在layout中显示的位置  
             }  
         });
-        
+		
+		countyCode = getIntent().getStringExtra("county_code"); //在choose里面有一个putExtra传county_code
+		
 //		//点击button显示底部弹出的表格栏
 //		GridView gridView = (GridView) findViewById(R.id.gridView_layout);
 //		ArrayList<HashMap<String, Object>> listImageItem = new ArrayList<HashMap<String,Object>>();
@@ -197,7 +199,7 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 //        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mDatas);  
 //        mListView.setAdapter(mAdapter);  
 	        
-		countyCode = getIntent().getStringExtra("county_code"); //在choose里面有一个putExtra传county_code
+		
 		
 //		//返回按钮
 //		return_button.setOnClickListener(new OnClickListener() {	
@@ -205,9 +207,9 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 //			public void onClick(View v) {
 //				// TODO Auto-generated method stub
 //				//把city_selected修改为false，这样跳回ChooseAreaActivity就不会直接显示县城天气了。
-////				SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
-////				editor.putBoolean("city_selected", false);
-////				editor.commit();
+//				SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
+//				editor.putBoolean("city_selected", false);
+//				editor.commit();
 //				Intent intent = new Intent(WeatherActivity.this, ChooseAreaActivity.class);
 //				intent.putExtra("from_weather_activity", true);
 //				startActivity(intent);
@@ -215,6 +217,7 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 //				return;
 //			}
 //		});
+
 			
 //		//刷新天气按钮
 //		refresh_button.setOnClickListener(new OnClickListener() {	
@@ -267,21 +270,22 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 				// TODO Auto-generated method stub
 				View mContent = mDrawerLayout.getChildAt(0);
 				View mMenu = drawerView;
-				float scale = 1- slideOffset;
-				float rightScale = 0.8f + scale * 0.2f;
+				//以下动画是仿qq的
+				float scale = 1- slideOffset;   //动画比例计算
+				float rightScale = 0.8f + scale * 0.2f; //内容区域的缩放比例
 				if (drawerView.getTag().equals("LEFT")){
-					 float leftScale = 1 - 0.3f * scale;
+					 float leftScale = 1 - 0.1f * scale;   //菜单的缩放比例计算
 					 
 					 //以下是com.nineoldandroids.view.ViewHelper; 提供的api接口
-					 ViewHelper.setScaleX(mMenu, leftScale);
+					 ViewHelper.setScaleX(mMenu, leftScale);  //设置菜单栏的显示
 					 ViewHelper.setScaleY(mMenu, leftScale);
 					 ViewHelper.setAlpha(mMenu, 0.6f + 0.4f * (1 - scale));
-			         ViewHelper.setTranslationX(mContent,  
+			         ViewHelper.setTranslationX(mContent, 
 	                            mMenu.getMeasuredWidth() * (1 - scale));  
 	                 ViewHelper.setPivotX(mContent, 0);  
 	                 ViewHelper.setPivotY(mContent,  
 	                            mContent.getMeasuredHeight() / 2);  
-	                 mContent.invalidate();
+	                 mContent.invalidate();  
 				}
 			}
 			
@@ -482,4 +486,21 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
         }  
           
     };  
+    
+    /**
+     * 左侧边栏add按钮侦听事件
+     * @param view
+     */
+	public void add(View view){
+		//把city_selected修改为false，这样跳回ChooseAreaActivity就不会直接显示县城天气了。
+//		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
+//		editor.putBoolean("city_selected", false);
+//		editor.commit();
+		Intent intent = new Intent(WeatherActivity.this, ChooseAreaActivity.class);
+		intent.putExtra("from_weather_activity", true);
+		startActivity(intent);
+		finish();
+		return;
+	}
+	
 }
