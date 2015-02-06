@@ -2,6 +2,7 @@ package activity;
 
 import java.io.ObjectOutputStream.PutField;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import service.AutoUpdateService;
@@ -17,6 +18,7 @@ import model.County;
 import model.Province;
 
 import com.chinaweather.app.R;
+import android.R.string;
 //import android.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -34,13 +36,15 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;  
+import android.widget.SearchView;
 
-
-public class ChooseAreaActivity extends Activity{
+public class ChooseAreaActivity extends Activity implements SearchView.OnQueryTextListener{
 	
 	public static final int LEVEL_PROVINCE = 0;
 	public static final int LEVEL_CITY = 1;
@@ -48,11 +52,31 @@ public class ChooseAreaActivity extends Activity{
 	
 	private ProgressDialog progressDialog; 
 	private TextView titleText;
-	private ListView listView;              //
+	private GridView gridView;              //
 	private ArrayAdapter<String> adapter;   //适配器，用于连接后端数据和前端显示的设配器接口
-	private CoolWeatherDB coolWeatherDB;
 	private List<String> dataList = new ArrayList<String>();
 	
+	private List<String> mStrings = new ArrayList<String>(); //把所有的县名加载到mStrings数组中 
+	private ArrayAdapter<String> lvAdapter;
+	private CoolWeatherDB coolWeatherDB;
+
+	/**
+	 * 
+	 */
+	private List<County> countyList4mStrings;
+	private List<City> cityList4mStrings;
+	private List<Province> provinceList4mStrings;
+	private Province selectedProvince1;
+	private City selectedCity1;
+	/**
+	 * 定义一个搜索界面
+	 */
+	private SearchView sv;
+	
+	/**
+	 * 顶一个清单列表
+	 */
+	private ListView lv;
 	
 	/**
 	 * 主界面设置
@@ -79,7 +103,7 @@ public class ChooseAreaActivity extends Activity{
 	 * 县列表
 	 */
 	private List<County> countyList;
-	
+
 	/**
 	 *  选中的省份
 	 */
@@ -112,11 +136,18 @@ public class ChooseAreaActivity extends Activity{
 //		}
 		
 		
-		listView = (ListView) findViewById(R.id.list_view);      //获取xml文件里相对应的id
+		gridView = (GridView) findViewById(R.id.grid_view);      //获取xml文件里相对应的id
 		titleText = (TextView) findViewById(R.id.title_text);    //获取xml文件里相对应的id
 		setting = (Button) findViewById(R.id.setting_button);    //开关自动更新
 		
+		
 
+		//设置一个listview，专门用于自动显示搜索条目
+
+		lv = (ListView) findViewById(R.id.lv); //
+		lvAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,mStrings);
+		lv.setAdapter(lvAdapter);
+		lv.setTextFilterEnabled(true);
 		
 		//设置一个autoUpdate的值
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this).edit();
@@ -147,18 +178,22 @@ public class ChooseAreaActivity extends Activity{
 			}
 		});
 		
-		//数据到视图一般是三个步骤，1、新建一个数据适配器 2、适配器加载数据源 3、视图ListView加载适配器
-		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList); //适配器加载数据源
-		listView.setAdapter(adapter);    //3、视图ListView加载适配器
+		//数据到视图一般是三个步骤，1、新建一个数据适配器 2、适配器加载数据源 3、视图gridView加载适配器
+		adapter = new ArrayAdapter<String>(this, R.layout.items, dataList); //适配器加载数据源
+		gridView.setAdapter(adapter);    //3、视图gridView加载适配器
 		
 		coolWeatherDB = CoolWeatherDB.getInstance(this);	//?
-		//为ListView设置列表项点击监听器，等待按钮按下
-		listView.setOnItemClickListener(new OnItemClickListener() {
+		
+		//这句必须放在CoolWeatherDB.getInstance(this);之后
+		loadData2mStrings();
+		
+		//为gridView设置列表项点击监听器，等待按钮按下
+		gridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view,
 					int index, long arg3) {
 				// TODO Auto-generated method stub
-				if (currentLevel == LEVEL_PROVINCE){			//看选择的是城市还是省
+				if (currentLevel == LEVEL_PROVINCE){		   //看选择的是城市还是省
 					selectedProvince = provinceList.get(index);   
 					queryCities();
 				}else if(currentLevel == LEVEL_CITY){
@@ -191,7 +226,7 @@ public class ChooseAreaActivity extends Activity{
 				dataList.add(province.getProvinceName());
 			}
 			adapter.notifyDataSetChanged();  //刷新数据
-			listView.setSelection(0);		//设置当前选中项
+			gridView.setSelection(0);		//设置当前选中项
 			titleText.setText("中国");		//Sets the string value of the TextView
 			currentLevel = LEVEL_PROVINCE;
 		}else{
@@ -211,7 +246,7 @@ public class ChooseAreaActivity extends Activity{
 				dataList.add(city.getCityName());
 			}
 			adapter.notifyDataSetChanged();  //刷新数据
-			listView.setSelection(0);		//设置当前选中项   ?
+			gridView.setSelection(0);		//设置当前选中项   ?
 			titleText.setText(selectedProvince.getProvinceName());		//Sets the string value of the TextView
 			currentLevel = LEVEL_CITY;
 		}else{
@@ -231,7 +266,7 @@ public class ChooseAreaActivity extends Activity{
 				dataList.add(county.getCountyName());
 			}
 			adapter.notifyDataSetChanged();  //刷新数据
-			listView.setSelection(0);		//设置当前选中项
+			gridView.setSelection(0);		//设置当前选中项
 			titleText.setText(selectedCity.getCityName());		//Sets the string value of the TextView
 			currentLevel = LEVEL_COUNTY;
 		}else{
@@ -340,10 +375,57 @@ public class ChooseAreaActivity extends Activity{
 			if(isFromWeatherActivity) {
 				Intent intent = new Intent(this, WeatherActivity.class);
 				startActivity(intent);
+			}else
+			{
+				//跳到天气显示的画面
 			}
 			finish();
 		}
 	}
+
+
+
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public boolean onQueryTextChange(String newText) {
+		// TODO Auto-generated method stub
+		
+		return false;
+	}
+	
+	/**
+	 * 加载所有的县名到mStrings中,然后显示出来
+	 */
+	public void loadData2mStrings(){
+		provinceList4mStrings=coolWeatherDB.loadProvinces(); 
+		//mStrings.clear();
+		for (Province province : provinceList4mStrings)  //foreach  遍历provinceList4mStrings的每个对象，province为++对象
+		{
+			//mStrings.add(province.getProvinceName());
+			selectedProvince1 = province;       //遍历list，取出每个省份下市的数据
+			cityList4mStrings = coolWeatherDB.loadCities(selectedProvince1.getId()); //第一次读取怎么可能有数据？当然会报没有province_id的错误啊？
+			for (City city : cityList4mStrings)
+			{
+				selectedCity1 = city;
+				countyList4mStrings = coolWeatherDB.loadCounties(selectedCity1.getId());
+				for (County county : countyList4mStrings)
+				{
+					//String countyCode = countyList.get(index).getCountyCode();   //得到县级的代号
+					mStrings.add(county.getCountyName());
+					
+				}
+			 }
+		  lvAdapter.notifyDataSetChanged();  //刷新数据
+		}
+	  }
+	
 }
 
 

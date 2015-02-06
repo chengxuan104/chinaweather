@@ -3,13 +3,49 @@
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:orientation="vertical" >
-      	
+	    android:orientation="vertical"
+	    android:background="#000000">
+	    
+	    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#2c2c2c">
+        
+        <TextView 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="添加城市"
+            android:textSize="22sp"
+            android:textColor="#ecf0f1"
+            android:gravity="center"
+            /> 
+        </RelativeLayout>
+        
+	    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2c2c2c"
+        android:layout_marginTop="1dp" 
+        android:layout_marginBottom="1dp">
+        <!-- 定义一个SearchView -->
+        <SearchView 
+            android:id="@+id/sv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <!-- 为SearchView定义自动完成的ListView -->
+        <ListView 
+            android:id="@+id/lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    	</RelativeLayout>
+
 	    <RelativeLayout
 	        android:layout_width="match_parent"
-	        android:layout_height="50dp"
-	        android:background="#484E61">
+	        android:layout_height="wrap_content"
+	        android:background="#2c2c2c"
+	        android:layout_marginBottom="1dp">
        
+	        <!--定义一个自动定位的按钮  -->
 	        <Button
 	            android:id="@+id/setting_button"
 	            android:layout_width="40dp"
@@ -17,23 +53,32 @@
 	            android:layout_marginTop="10dp"
 	            android:layout_alignParentRight="true"
 	            android:layout_centerVertical="true"
-	            android:layout_marginRight="10dp"
+	            android:layout_marginRight="30dp"
 	            android:background="@drawable/settingicon" />
-        
+	        
+        	<!--定义一个显示当前目录的标题  -->
 	        <TextView
 	            android:id="@+id/title_text"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:layout_centerInParent="true"
+	            android:layout_alignParentLeft="true"
+	          	android:gravity="center"
+	          	android:layout_marginTop="10dp"
+	          	android:layout_marginLeft="30dp"
 	            android:textColor="#fff"
-	            android:textSize="24sp"/>
+	            android:textSize="20sp"/>
 	    </RelativeLayout>
-	    
-              <ListView
-		        android:id="@+id/list_view"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent">		        
-	   		</ListView> 
+
+   		<GridView 
+   		    android:id="@+id/grid_view"
+   		    android:layout_width="match_parent"
+   		    android:layout_height="match_parent"
+   		    android:numColumns="3"
+   		    android:background="#000000"
+   		    android:horizontalSpacing="1dp"  
+    		android:verticalSpacing="1dp"
+    		android:gravity="center"
+   		    />
 </LinearLayout>
   
 
