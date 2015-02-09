@@ -9,7 +9,8 @@
 	    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#2c2c2c">
+        android:background="#2c2c2c"
+        android:layout_marginBottom="1dp">
         
         <TextView 
             android:layout_width="match_parent"
@@ -20,24 +21,25 @@
             android:gravity="center"
             /> 
         </RelativeLayout>
-        
-	    <RelativeLayout
+        <!-- 搜索栏，暂时不做 -->
+<!-- 	    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#2c2c2c"
         android:layout_marginTop="1dp" 
         android:layout_marginBottom="1dp">
-        <!-- 定义一个SearchView -->
+        定义一个SearchView
         <SearchView 
             android:id="@+id/sv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        <!-- 为SearchView定义自动完成的ListView -->
+        为SearchView定义自动完成的ListView
         <ListView 
             android:id="@+id/lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-    	</RelativeLayout>
+    	</RelativeLayout> -->
+	
 
 	    <RelativeLayout
 	        android:layout_width="match_parent"

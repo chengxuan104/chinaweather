@@ -13,6 +13,9 @@ import util.HttpCallbackListener;
 import util.HttpUtil;
 import util.Utility;
 
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.location.LocationClientOption.LocationMode;
 import com.chinaweather.app.R;
 
 import android.app.Activity;
@@ -59,6 +62,11 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 //    private List<String> mDatas = new ArrayList<String>(Arrays.asList("Java", "Javascript", "C++", "Ruby", "Json",  
 //            "HTML"));
 
+	private LocationClient mLocationClient;    //以下这段是百度地图的
+	private TextView LocationResult;
+	private Button startLocation;
+	private LocationMode tempMode = LocationMode.Hight_Accuracy;
+	private String tempcoor="bd09ll";
 	
 	/**
 	 * 下拉刷新
@@ -250,6 +258,29 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 			//没有县级代号时就直接显示本地天气
 			showWeather();
 		}
+		
+		//百度地图定位sdk
+		mLocationClient = ((LocationApplication)getApplication()).mLocationClient;
+		
+		LocationResult = (TextView)findViewById(R.id.textView1);
+		 ((LocationApplication)getApplication()).mLocationResult = LocationResult;
+
+		startLocation = (Button)findViewById(R.id.addfence);
+		startLocation.setOnClickListener(new OnClickListener(){
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				InitLocation();   //设置定位模式，定位频率	
+				if(startLocation.getText().equals(getString(R.string.startlocation))){
+					mLocationClient.start();
+					startLocation.setText(getString(R.string.stoplocation));
+				}else{
+					mLocationClient.stop();
+					startLocation.setText(getString(R.string.startlocation));
+				}
+			}
+		});
 	}
 	
 	/**
@@ -292,7 +323,6 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 			@Override
 			public void onDrawerOpened(View arg0) {
 				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
@@ -501,6 +531,25 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 		startActivity(intent);
 		finish();
 		return;
+	}
+	
+	//百度地图定位
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		mLocationClient.stop();
+		super.onStop();
+	}
+	
+	//百度地图定位sdk初始化，设定定位模式定位频率
+	private void InitLocation(){
+		LocationClientOption option = new LocationClientOption();
+		option.setLocationMode(tempMode);//设置定位模式
+		option.setCoorType(tempcoor);//返回的定位结果是百度经纬度，默认值bd09ll
+		int span=1000;
+		option.setScanSpan(span);//设置发起定位请求的间隔时间为5000ms
+		option.setIsNeedAddress(true);   //checkGeoLocation.isChecked()  //设置为反地理编码
+		mLocationClient.setLocOption(option);
 	}
 	
 }
