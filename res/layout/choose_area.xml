@@ -48,15 +48,25 @@
 	        android:layout_marginBottom="1dp">
        
 	        <!--定义一个自动定位的按钮  -->
+	        
+	        <TextView
+	        android:id="@+id/textView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text=""
+	        android:textAppearance="?android:attr/textAppearanceLarge"/>
+	        	   
 	        <Button
-	            android:id="@+id/setting_button"
-	            android:layout_width="40dp"
+	            android:id="@+id/addfence"
+	            android:layout_width="wrap_content"
 	            android:layout_height="40dp"
 	            android:layout_marginTop="10dp"
 	            android:layout_alignParentRight="true"
 	            android:layout_centerVertical="true"
 	            android:layout_marginRight="30dp"
-	            android:background="@drawable/settingicon" />
+	            android:text="开启定位"
+	            android:textColor="#fff" 
+	            android:background="#00000000"/>
 	        
         	<!--定义一个显示当前目录的标题  -->
 	        <TextView

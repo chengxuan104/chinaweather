@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--点击编辑进入删除城市的界面  -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    android:background="#272636" 
+    android:gravity="center" >
+
+    <ImageView
+        android:id="@+id/left_del"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/del" />
+
+    <TextView
+        android:id="@+id/del_cityname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:gravity="center"
+        android:textColor="#ffffffff"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/del_templature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:textColor="#ffffffff"
+        android:textSize="16sp" />
+
+</RelativeLayout>

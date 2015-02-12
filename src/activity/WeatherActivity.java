@@ -2,11 +2,13 @@ package activity;
 
 
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import service.AutoUpdateService;
 import util.HttpCallbackListener;
@@ -30,6 +32,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,11 +65,24 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 //    private List<String> mDatas = new ArrayList<String>(Arrays.asList("Java", "Javascript", "C++", "Ruby", "Json",  
 //            "HTML"));
 
-	private LocationClient mLocationClient;    //以下这段是百度地图的
-	private TextView LocationResult;
-	private Button startLocation;
-	private LocationMode tempMode = LocationMode.Hight_Accuracy;
-	private String tempcoor="bd09ll";
+	/**
+	 * 接收compileCity传过来的值
+	 */
+	ArrayList<Integer> cityList = new ArrayList<Integer>();
+	
+	/**
+	 * 做侧边栏listview
+	 */
+	List<Map<String, Object>> listItems = new ArrayList<Map<String,Object>>();
+	
+	/**
+	 * 定义一个容器
+	 */
+	SimpleAdapter madapter;
+	/**
+	 * 
+	 */
+	private ListView lv;
 	
 	/**
 	 * 下拉刷新
@@ -174,6 +190,26 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 		
 		countyCode = getIntent().getStringExtra("county_code"); //在choose里面有一个putExtra传county_code
 		
+		//显示城市名称以及温度在左侧边栏
+		lv = (ListView)findViewById(R.id.left_listview);
+		
+		Map<String, Object> listItem2 = new HashMap<String, Object>();
+		listItem2.put("cityName", "ff");
+		listItem2.put("temperature", "210c");
+		listItems.add(listItem2);
+		
+		
+		madapter = new SimpleAdapter( this, 
+										listItems,
+										R.layout.leftlayout_listview_item, 
+										new String[]{"cityName", "temperature"},
+										new int []{R.id.left_cityname, R.id.left_templature});
+		//从CompileCity传回来的listitem
+		
+		
+		lv.setAdapter(madapter);
+		madapter.notifyDataSetChanged();
+		
 //		//点击button显示底部弹出的表格栏
 //		GridView gridView = (GridView) findViewById(R.id.gridView_layout);
 //		ArrayList<HashMap<String, Object>> listImageItem = new ArrayList<HashMap<String,Object>>();
@@ -195,8 +231,6 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 //											);
 //		gridView.setAdapter(saImageItems);
 //		//gridView.setOnItemClickListener();
-		
-		
 		
 //		mListView = (ListView) findViewById(R.id.id_listview);  
 //        mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.id_swipe_ly);  
@@ -245,6 +279,10 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 //			}
 //		});
 		
+		//从compileCity中得到一个cityList，这个动态数组中存的是要删除的index
+		cityList = (ArrayList)getIntent().getSerializableExtra("from_compileCity_listItems");
+
+		
 		/**
 		 * 当 str 是空（null）或空串（""）时返回为真
 		 */
@@ -257,30 +295,7 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 		} else {
 			//没有县级代号时就直接显示本地天气
 			showWeather();
-		}
-		
-		//百度地图定位sdk
-		mLocationClient = ((LocationApplication)getApplication()).mLocationClient;
-		
-		LocationResult = (TextView)findViewById(R.id.textView1);
-		 ((LocationApplication)getApplication()).mLocationResult = LocationResult;
-
-		startLocation = (Button)findViewById(R.id.addfence);
-		startLocation.setOnClickListener(new OnClickListener(){
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				InitLocation();   //设置定位模式，定位频率	
-				if(startLocation.getText().equals(getString(R.string.startlocation))){
-					mLocationClient.start();
-					startLocation.setText(getString(R.string.stoplocation));
-				}else{
-					mLocationClient.stop();
-					startLocation.setText(getString(R.string.startlocation));
-				}
-			}
-		});
+		}		
 	}
 	
 	/**
@@ -416,15 +431,33 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 	private void showWeather() {
 		// TODO Auto-generated method stub
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		cityNameText.setText(prefs.getString("city_name", "cx1")); //没有得到返回值  //检索和city_name相同的的字符串并返回值，如果没有，就返回 默认的字符串。这里是""
-		temp1Text.setText(prefs.getString("temp1", ""));
-		temp2Text.setText(prefs.getString("temp2", ""));
-		weatherDespText.setText(prefs.getString("weather_desp", ""));
-		publishText.setText("今天" + prefs.getString("publish_time", "") + "发布");
-		currentDateText.setText(prefs.getString("current_date", ""));
+		cityNameText.setText(prefs.getString("city_name", "广丰")); //没有得到返回值  //检索和city_name相同的的字符串并返回值，如果没有，就返回 默认的字符串。这里是""
+		temp1Text.setText(prefs.getString("temp1", "-1"));
+		temp2Text.setText(prefs.getString("temp2", "5"));
+		weatherDespText.setText(prefs.getString("weather_desp", "下雪"));
+		publishText.setText("今天" + prefs.getString("publish_time", "11:00") + "发布");
+		currentDateText.setText(prefs.getString("current_date", "2/18/2015"));
 		
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
+		
+		//添加城市到list中
+		for(int i=0; i < 2; i++)
+		{
+			Map<String, Object> listItem1 = new HashMap<String, Object>();
+			listItem1.put("cityName", prefs.getString("city_name", "广丰"));
+			listItem1.put("temperature", prefs.getString("temp1", "-1"));
+			listItems.add(listItem1);
+		}
+		
+		if(cityList != null)
+		{
+			for (int list:cityList ) {
+				listItems.remove(list);
+			}	
+			Log.v("fff", "delete city!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		}
+		
 		
 //		//根据autoUpdate进行判断，autoUpdate开启or关闭后台服务
 //		if(prefs.getBoolean("autoUpdate", false))
@@ -527,29 +560,28 @@ public class WeatherActivity extends FragmentActivity implements SwipeRefreshLay
 //		editor.putBoolean("city_selected", false);
 //		editor.commit();
 		Intent intent = new Intent(WeatherActivity.this, ChooseAreaActivity.class);
-		intent.putExtra("from_weather_activity", true);
+		//intent.putExtra("from_weather_activity", true);
 		startActivity(intent);
-		finish();
+		//finish(); //不finish返回的时候会返回到本界面
 		return;
 	}
 	
-	//百度地图定位
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		mLocationClient.stop();
-		super.onStop();
+	//编辑按钮
+	public void compile(View view) {
+
+//		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
+//		editor.putBoolean("del_city", false);
+//		editor.remove("position0");
+//		editor.remove("position1");
+//		editor.remove("position2");
+//		editor.remove("position3");
+//		editor.commit();
+		
+		Intent intent = new Intent(WeatherActivity.this, CompileCity.class);
+		
+		intent.putExtra("from_weatherAcv_listItems", (Serializable)listItems);  //传list的时候一定要序列化接口
+		startActivity(intent);
+		//finish();
+		return;
 	}
-	
-	//百度地图定位sdk初始化，设定定位模式定位频率
-	private void InitLocation(){
-		LocationClientOption option = new LocationClientOption();
-		option.setLocationMode(tempMode);//设置定位模式
-		option.setCoorType(tempcoor);//返回的定位结果是百度经纬度，默认值bd09ll
-		int span=1000;
-		option.setScanSpan(span);//设置发起定位请求的间隔时间为5000ms
-		option.setIsNeedAddress(true);   //checkGeoLocation.isChecked()  //设置为反地理编码
-		mLocationClient.setLocOption(option);
-	}
-	
 }

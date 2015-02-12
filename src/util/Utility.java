@@ -121,6 +121,7 @@ public class Utility {
 		// TODO Auto-generated method stub
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();//允许更改SharedPreferences对象，但是记得更改了之后要commit  //Create a new Editor for these preferences, through which you can make modifications to the data in the preferences and atomically commit those changes back to the SharedPreferences object.
+		editor.putInt("city", 1);
 		editor.putBoolean("city_selected", true);
 		editor.putString("city_name", cityName);
 		editor.putString("weather_code", weatherCode);

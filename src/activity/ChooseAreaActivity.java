@@ -50,6 +50,11 @@ import android.widget.SearchView;
 
 public class ChooseAreaActivity extends Activity implements SearchView.OnQueryTextListener{
 	
+	private LocationClient mLocationClient;    //以下这段是百度地图的
+	private TextView LocationResult;
+	private Button startLocation;
+	private LocationMode tempMode = LocationMode.Hight_Accuracy;
+	private String tempcoor="bd09ll";         //用百度地图bd09ll
 
 	
 	public static final int LEVEL_PROVINCE = 0;
@@ -144,7 +149,7 @@ public class ChooseAreaActivity extends Activity implements SearchView.OnQueryTe
 		
 		gridView = (GridView) findViewById(R.id.grid_view);      //获取xml文件里相对应的id
 		titleText = (TextView) findViewById(R.id.title_text);    //获取xml文件里相对应的id
-		setting = (Button) findViewById(R.id.setting_button);    //开关自动更新
+		//setting = (Button) findViewById(R.id.setting_button);    //开关自动更新
 		
 		
 
@@ -161,28 +166,28 @@ public class ChooseAreaActivity extends Activity implements SearchView.OnQueryTe
 		editor.commit();
 		
 		//侦听设置按钮，假如点下，关闭自动更新
-		setting.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this);
-				//判断autoUpdate的值，设为相反的值，实现类似滑动按钮 
-				if(prefs.getBoolean("autoUpdate", false))
-				{
-					SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this).edit();
-					editor.putBoolean("autoUpdate", false);
-					editor.commit();
-				}
-				else
-				{
-					SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this).edit();
-					editor.putBoolean("autoUpdate",true);
-					editor.commit();
-				}
-			}
-		});
+//		setting.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				
+//				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this);
+//				//判断autoUpdate的值，设为相反的值，实现类似滑动按钮 
+//				if(prefs.getBoolean("autoUpdate", false))
+//				{
+//					SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this).edit();
+//					editor.putBoolean("autoUpdate", false);
+//					editor.commit();
+//				}
+//				else
+//				{
+//					SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ChooseAreaActivity.this).edit();
+//					editor.putBoolean("autoUpdate",true);
+//					editor.commit();
+//				}
+//			}
+//		});
 		
 		//数据到视图一般是三个步骤，1、新建一个数据适配器 2、适配器加载数据源 3、视图gridView加载适配器
 		adapter = new ArrayAdapter<String>(this, R.layout.items, dataList); //适配器加载数据源
@@ -222,6 +227,28 @@ public class ChooseAreaActivity extends Activity implements SearchView.OnQueryTe
 		});
 		queryProvince(); //上面的是初始化，从这里开始加载省级数据。
 		
+		//百度地图定位sdk
+		mLocationClient = ((LocationApplication)getApplication()).mLocationClient;
+		
+		LocationResult = (TextView)findViewById(R.id.textView1);
+		 ((LocationApplication)getApplication()).mLocationResult = LocationResult;
+
+		startLocation = (Button)findViewById(R.id.addfence);
+		startLocation.setOnClickListener(new OnClickListener(){
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				InitLocation();   //设置定位模式，定位频率	
+				if(startLocation.getText().equals(getString(R.string.startlocation))){
+					mLocationClient.start();
+					startLocation.setText(getString(R.string.stoplocation));
+				}else{
+					mLocationClient.stop();
+					startLocation.setText(getString(R.string.startlocation));
+				}
+			}
+		});
 
 	}
 
@@ -232,7 +259,7 @@ public class ChooseAreaActivity extends Activity implements SearchView.OnQueryTe
 	 * 查询全国所有的省，优先从数据库查询，如果没有查询到再去服务器上查询
 	 */
 	private void queryProvince(){
-		provinceList = coolWeatherDB.loadProvinces();   
+/*		provinceList = coolWeatherDB.loadProvinces();   
 		if(provinceList.size() > 0){	
 			dataList.clear();
 			for (Province province : provinceList)
@@ -245,7 +272,8 @@ public class ChooseAreaActivity extends Activity implements SearchView.OnQueryTe
 			currentLevel = LEVEL_PROVINCE;
 		}else{
 			queryFromServer(null, "province");
-		}
+		}*/
+		queryFromServer(null, "province");
 	}
 	
 	/**
@@ -300,7 +328,8 @@ public class ChooseAreaActivity extends Activity implements SearchView.OnQueryTe
 			address = "http://www.weather.com.cn/data/list3/city" + code + ".xml"; //不空为市级或者县的数据
 		}else{
 			address = "http://www.weather.com.cn/data/list3/city.xml"; //省级数据
-		}
+		}	
+
 		showProgressDialog();   //显示进度对话框
 		
 		 //调用sendHttpRequest传入地址和对象
@@ -507,6 +536,24 @@ public class ChooseAreaActivity extends Activity implements SearchView.OnQueryTe
 		}
 	  }
 	
+		//百度地图定位
+		@Override
+		protected void onStop() {
+			// TODO Auto-generated method stub
+			mLocationClient.stop();
+			super.onStop();
+		}
+		
+		//百度地图定位sdk初始化，设定定位模式定位频率
+		private void InitLocation(){
+			LocationClientOption option = new LocationClientOption();
+			option.setLocationMode(tempMode);//设置定位模式
+			option.setCoorType(tempcoor);//返回的定位结果是百度经纬度，默认值bd09ll
+			int span=1000;
+			option.setScanSpan(span);//设置发起定位请求的间隔时间为5000ms
+			option.setIsNeedAddress(true);   //checkGeoLocation.isChecked()  //设置为反地理编码
+			mLocationClient.setLocOption(option);
+		}
 
 }
 
